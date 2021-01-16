@@ -1,1 +1,1 @@
-export default process.env.SLACK_WEBHOOK || 'https://hooks.slack.com/services/...';
+export default process.env.SLACK_WEBHOOK || '';
