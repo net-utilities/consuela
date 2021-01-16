@@ -5,13 +5,12 @@ import logger from '../../logger/winston';
 
 const webhook = new IncomingWebhook(webHook);
 
-if (webHook !== '') {
-  // Send the notification
-  const send = async (report: IReport) => {
 
+// Send the notification
+const send = async (report: IReport) => {
+
+  if (webHook !== '') {
     logger.info('Sending Slack report')
-
-
     const res = await webhook.send({
       "blocks": [
         {
@@ -74,8 +73,12 @@ if (webHook !== '') {
         }
       ]
     });
-
     logger.info('Slack report sent!');
-  };
-}
+  } else {
+    logger.info('Slack webhook not configured, skipping.')
+  }
+
+
+};
+
 export default send;
