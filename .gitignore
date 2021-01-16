@@ -1,7 +1,6 @@
 node_modules
 build
 .idea
-update_db/src/config.ts
 couchdb/data
 couchdb/etc
 update_db_secrets.yaml
