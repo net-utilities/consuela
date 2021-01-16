@@ -2,7 +2,8 @@
 version: '3'
 services:
   update_db:
-    build: ./update_db
+    network_mode: host
+    build: .
     environment:
       - F5_USERNAME=admin
       - F5_PASSWORD=password
