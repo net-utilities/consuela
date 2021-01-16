@@ -48,6 +48,7 @@ module.exports = {
         // these are somewhat open to debate but match our current code.
         '@typescript-eslint/interface-name-prefix': 'off',
         '@typescript-eslint/prefer-interface': 'off',
+        '@typescript-eslint/ban-types': 'off',
         '@typescript-eslint/no-empty-interface': [
           'error',
           {
