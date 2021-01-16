@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: consuela-db
+  namespace: consuela
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consuela
+      tier: database
+  serviceName: consuela-db
+  template:
+    metadata:
+      labels:
+        app: consuela
+        tier: database
+    spec:
+      containers:
+        - name: consuela-db
+          image: couchdb:3.1.1
+          env:
+            - name: COUCHDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: consuela-secrets
+                  key: COUCHDB_USER
+            - name: COUCHDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: consuela-secrets
+                  key: COUCHDB_PASSWORD
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 5984
+          volumeMounts:
+            - name: consuela-db
+              mountPath: /opt/couchdb/data
+  volumeClaimTemplates:
+  - metadata:
+      namespace: consuela
+      name: consuela-db
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      volumeMode: Filesystem
+      resources:
+        requests:
+          storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consuela-db
+  namespace: consuela
+  labels:
+    app: consuela
+    tier: database
+spec:
+  type: ClusterIP
+  ports:
+    - targetPort: 5984
+      port: 5984
+  selector:
+    app: consuela
+    tier: database

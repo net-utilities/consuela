@@ -1,0 +1,49 @@
+{
+  "name": "f5-compliance",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "dev": "cross-env COUCHDB_USER=admin COUCHDB_PASSWORD=password COUCHDB_SERVER=localhost:5984 NODE_ENV=development nodemon build/index.js",
+    "test": "jest --coverage",
+    "build": "tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/net-utilities/consuela.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/net-utilities/consuela/issues"
+  },
+  "homepage": "https://github.com/net-utilities/consuela#readme",
+  "dependencies": {
+    "@slack/webhook": "^5.0.4",
+    "@types/node": "^14.14.21",
+    "@types/node-fetch": "^2.5.8",
+    "@types/request": "^2.48.5",
+    "@types/winston": "^2.4.4",
+    "better-queue": "^3.8.10",
+    "express": "^4.17.1",
+    "nano": "^8.2.3",
+    "node-fetch": "^2.6.1",
+    "source-map-support": "^0.5.19",
+    "tsc-node": "0.0.3",
+    "typescript": "^4.1.3",
+    "winston": "^3.3.3",
+    "winston-logzio": "^5.1.2"
+  },
+  "devDependencies": {
+    "@types/better-queue": "^3.8.2",
+    "@types/chai": "^4.2.14",
+    "@types/jest": "^26.0.20",
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
+    "@typescript-eslint/parser": "^4.13.0",
+    "chai": "^4.2.0",
+    "eslint": "^7.18.0",
+    "jest": "^26.6.3",
+    "source-map-support": "^0.5.19",
+    "ts-jest": "^26.4.4"
+  }
+}

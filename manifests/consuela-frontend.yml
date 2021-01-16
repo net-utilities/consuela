@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consuela-frontend
+  namespace: consuela
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: consuela
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: consuela
+        tier: frontend
+    spec:
+      containers:
+        - name: consuela-frontend
+          image: <where you sent the frontend container>
+          env:
+            - name: COUCHDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: consuela-secrets
+                  key: COUCHDB_USER
+            - name: COUCHDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: consuela-secrets
+                  key: COUCHDB_PASSWORD
+            - name: COUCHDB_SERVER
+              value: "consuela-db:5984"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3001

@@ -1,0 +1,12 @@
+---
+version: '3'
+services:
+  update_db:
+    build: ./update_db
+    environment:
+      - F5_USERNAME=admin
+      - F5_PASSWORD=password
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=password
+      - COUCHDB_SERVER=localhost:5984
+      - SLACK_WEBHOOK=https://hooks.slack.com/services/... # Remove this if you don't want Slack reports

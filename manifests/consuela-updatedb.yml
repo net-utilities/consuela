@@ -1,0 +1,57 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: consuela-updatedb
+  namespace: consuela
+spec:
+  schedule: "00 06 * * *"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          activeDeadlineSeconds: 7200
+          containers:
+            - name: update-db
+              image: <where you sent the frontend container>
+              env:
+                - name: COUCHDB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: consuela-secrets
+                      key: COUCHDB_USER
+                - name: COUCHDB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: consuela-secrets
+                      key: COUCHDB_PASSWORD
+                - name: F5_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: consuela-secrets
+                      key: F5_USERNAME
+                - name: F5_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: consuela-secrets
+                      key: F5_PASSWORD
+                - name: SLACK_WEBHOOK
+                  valueFrom:
+                    secretKeyRef:
+                      name: consuela-secrets
+                      key: SLACK_WEBHOOK
+                - name: LOGZIO_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: consuela-secrets
+                      key: LOGZIO_TOKEN
+                - name: COUCHDB_SERVER
+                  value: "consuela-db:5984"
+                - name: LOGZIO_LISTENER
+                  value: "listener-eu.logz.io"
+                - name: LOGZIO_TYPE
+                  value: "consuela"
+                - name: COUCHDB_SERVER
+                  value: "consuela-db:5984"
+          restartPolicy: OnFailure
