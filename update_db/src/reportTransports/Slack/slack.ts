@@ -75,7 +75,7 @@ const send = async (report: IReport) => {
     });
     logger.info('Slack report sent!');
   } else {
-    logger.info('Slack webhook not configured, skipping.')
+    logger.info('Slack webhook not configured, skipping')
   }
 
 
