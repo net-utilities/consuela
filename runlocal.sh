@@ -1,3 +1,4 @@
+# Script to get started with development using minikube (unfinished, PR welcome)
 docker run -d -p 5000:5000 --name registry registry:latest
 
 # Build the containers
