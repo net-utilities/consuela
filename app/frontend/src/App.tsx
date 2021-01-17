@@ -171,12 +171,15 @@ const App: React.FC = () => {
   return (
     <Page>
       <CssBaseline />
+      <div style={{position: 'absolute', marginLeft: 'auto', marginRight: 'auto', top: '0.3em', left: 0, right: 0, textAlign: 'center'}}><img style={{maxWidth: '400px'}} src={'/logo.png'}/></div>
       <Table<DBMemberStats>
         name={'F5 Compliance'}
         columns={columns}
         data={data}
       />
+      <div style={{textAlign: 'center'}}>Written by <a href={'https://loadbalancing.se/about/'}>Patrik Jonsson</a></div>
     </Page>
+
   )
 }
 
