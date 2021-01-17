@@ -1,7 +1,6 @@
 # Configuration
-
-
-
+A guide for configuring Consuela can be found here: 
+[https://loadbalancing.se/2021/01/16/consuela/](https://loadbalancing.se/2021/01/16/consuela/)
 
 # Credits
 
