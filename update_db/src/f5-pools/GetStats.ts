@@ -21,20 +21,30 @@ const report: IReport = {
 
 const q = new Queue(async function(task: {id: string, deviceGroup: IDeviceGroup, f5Config: IF5Config }, cb) {
 
-  const { id, deviceGroup, f5Config } = task;
+  const { deviceGroup, f5Config } = task;
 
   for (const deviceDNS of deviceGroup.devices) {
     const device: Device = new Device(deviceDNS, deviceGroup.name, f5Config.username, f5Config.password);
-    if (await device.isActive()) {
-      logger.info(`${deviceDNS} is active, getting pools`);
-      await device.getPools();
-    } else {
-      logger.info(`${deviceDNS} is not active, skipping it.`);
+    try {
+      if (await device.isActive()) {
+        logger.info(`${deviceDNS} is active, getting pools`);
+        await device.getPools();
+      } else {
+        logger.info(`${deviceDNS} is not active, skipping it.`);
+      }
+    } catch (e) {
+      logger.error(`Failed to index ${deviceDNS}`);
+      logger.error(JSON.stringify(e));
+      report.failedDevices.push(deviceDNS);
     }
   }
   cb(null)
 
 }, { concurrent: 10 });
+
+q.on('task_finish', (taskId: string) => {
+  logger.info(`Finished indexing ${taskId}`);
+});
 
 q.on('task_failed', (taskId: string, errorMessage) => {
   logger.error(`Not able to reach ${taskId}`);
@@ -64,6 +74,13 @@ const GetStats: (f5Config: IF5Config) => Promise<void> = async (f5Config) => {
     logger.info(`Adding device group ${deviceGroup.name} to the queue`);
     q.push({id: deviceGroup.name, deviceGroup: deviceGroup, f5Config: f5Config });
   }
+
+  setInterval(() => {
+      logger.info('Current queue stats');
+      logger.info(JSON.stringify(q.getStats()));
+      console.log(JSON.stringify(q.getStats(), null, 4));
+    }, 60000
+  );
 
 }
 
