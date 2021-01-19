@@ -19,11 +19,21 @@ const report: IReport = {
   failedDevices: [],
 }
 
+const q = new Queue(async function(task: {id: string, deviceGroup: IDeviceGroup, f5Config: IF5Config }, cb) {
 
-const q = new Queue(async function(task: {id: string, device: Device}, cb) {
-  const { device } = task;
-  await device.getPools();
+  const { id, deviceGroup, f5Config } = task;
+
+  for (const deviceDNS of deviceGroup.devices) {
+    const device: Device = new Device(deviceDNS, deviceGroup.name, f5Config.username, f5Config.password);
+    if (await device.isActive()) {
+      logger.info(`${deviceDNS} is active, getting pools`);
+      await device.getPools();
+    } else {
+      logger.info(`${deviceDNS} is not active, skipping it.`);
+    }
+  }
   cb(null)
+
 }, { concurrent: 10 });
 
 q.on('task_failed', (taskId: string, errorMessage) => {
@@ -51,18 +61,10 @@ const GetStats: (f5Config: IF5Config) => Promise<void> = async (f5Config) => {
   deviceGroups = deviceGroups.concat(f5Config.explicitDeviceGroups);
 
   for (const deviceGroup of deviceGroups) {
-
-    for (const deviceDNS of deviceGroup.devices) {
-      const device: Device = new Device(deviceDNS, deviceGroup.name, f5Config.username, f5Config.password);
-
-      if (await device.isActive()) {
-        logger.info(`${deviceDNS} is active, getting pools`);
-        q.push({id: deviceDNS, device: device});
-      } else {
-        logger.info(`${deviceDNS} is not active, skipping it.`);
-      }
-    }
+    logger.info(`Adding device group ${deviceGroup.name} to the queue`);
+    q.push({id: deviceGroup.name, deviceGroup: deviceGroup, f5Config: f5Config });
   }
+
 }
 
 async function generateReport () {
