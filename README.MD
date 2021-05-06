@@ -5,7 +5,7 @@ A guide for configuring Consuela can be found here:
 # Credits
 
 ## Sponsor
-NetEnt for allocating the resources to write it and allowing me to publish the tool
+NetEnt for allocating some of the resources to write it and allowing me to publish the tool.
 
 https://www.netent.com/en/
 
